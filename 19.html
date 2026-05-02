@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang='vi'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>EduFocus Ultimate | Workspace Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a; --card: #1e293b; --accent: #3b82f6; --gold: #f59e0b;
+            --success: #10b981; --danger: #ef4444; --text: #f8fafc; --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.2s; }
+        body { background: var(--bg); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar Navigation */
+        .sidebar { width: 280px; background: #0b0f1a; border-right: 1px solid rgba(255,255,255,0.05); padding: 30px; display: flex; flex-direction: column; gap: 30px; }
+        .logo { font-size: 24px; font-weight: 800; color: var(--accent); display: flex; align-items: center; gap: 12px; }
+        .quote-box { background: var(--glass); padding: 15px; border-radius: 12px; border-left: 3px solid var(--gold); font-size: 13px; font-style: italic; color: #94a3b8; }
+
+        /* Main Workspace */
+        .main { flex: 1; padding: 40px; overflow-y: auto; background: radial-gradient(circle at top right, #1e3a8a22, transparent); }
+        .grid-layout { display: grid; grid-template-columns: 1fr 380px; gap: 30px; }
+
+        /* Card Styles */
+        .card { background: var(--card); border-radius: 24px; padding: 25px; border: 1px solid rgba(255,255,255,0.05); box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
+        h2 { font-size: 18px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+
+        /* Soundscape */
+        .sound-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+        .sound-item { background: var(--glass); padding: 12px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; }
+        .sound-item:hover { border-color: var(--accent); color: var(--accent); }
+
+        /* Inputs & Buttons */
+        .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        input, select { background: #0f172a; border: 1px solid rgba(255,255,255,0.1); color: white; padding: 12px; border-radius: 12px; outline: none; flex: 1; }
+        .btn { background: var(--accent); color: white; border: none; padding: 12px 20px; border-radius: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .btn:hover { filter: brightness(1.2); transform: translateY(-2px); }
+        
+        .btn-speed { background: var(--success); margin-top: 10px; width: 100%; }
+        .btn-reset-sec { background: transparent; border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; width: 100%; margin-top: 8px; }
+        .btn-reset-sec:hover { background: #ef444422; border-color: #ef4444; }
+
+        /* Task & Performance */
+        .task-item { background: var(--glass); padding: 15px; border-radius: 16px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; border: 1px solid transparent; }
+        .task-item:hover { border-color: rgba(59, 130, 246, 0.2); }
+        .done { text-decoration: line-through; opacity: 0.5; color: var(--success); }
+
+        .timer-v3 { text-align: center; }
+        #timer { font-size: 72px; font-weight: 800; color: var(--accent); font-family: monospace; margin: 10px 0; letter-spacing: -2px; }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
+        .stat-card { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid var(--glass); }
+        .stat-card div { font-size: 24px; font-weight: 800; color: var(--accent); }
+
+        .progress-container { height: 8px; background: rgba(0,0,0,0.3); border-radius: 10px; margin: 15px 0; overflow: hidden; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--accent), #60a5fa); width: 0%; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="logo"><i class="fas fa-brain"></i> EduFocus v4</div>
+        <div class="quote-box">"Làm việc thông minh hơn, không phải vất vả hơn."</div>
+        
+        <div class="card" style="background: transparent; padding: 10px; border:none; box-shadow:none;">
+            <h2 style="font-size: 14px;"><i class="fas fa-headphones"></i> Soundscape</h2>
+            <div class="sound-grid">
+                <div class="sound-item"><i class="fas fa-cloud-rain"></i><span>Mưa</span></div>
+                <div class="sound-item"><i class="fas fa-music"></i><span>Lo-fi</span></div>
+                <div class="sound-item"><i class="fas fa-coffee"></i><span>Cafe</span></div>
+            </div>
+        </div>
+
+        <div style="margin-top: auto;">
+            <div id="clock" style="font-size: 18px; font-weight: 700; color: var(--accent);">00:00:00</div>
+            <p style="font-size: 12px; color: #64748b;">Hôm nay: <span id="currentDate"></span></p>
+        </div>
+    </aside>
+
+    <main class="main">
+        <header style="margin-bottom: 30px;">
+            <h1>Chào ngày mới! 🎯</h1>
+            <p style="color: #94a3b8;">Hệ thống đã sẵn sàng giúp bạn chinh phục kiến thức.</p>
+        </header>
+
+        <div class="grid-layout">
+            <section>
+                <div class="card">
+                    <h2><i class="fas fa-tasks"></i> Kế hoạch học tập</h2>
+                    <div class="input-group">
+                        <input id="taskInput" placeholder="Thêm mục tiêu mới...">
+                        <select id="priority" style="width: 140px;">
+                            <option>Cao</option><option>Trung bình</option><option>Thấp</option>
+                        </select>
+                        <button class="btn" onclick="addTask()"><i class="fas fa-plus"></i></button>
+                    </div>
+                    <p style="font-size: 11px; color: #94a3b8; margin-top: 10px;">TIẾN ĐỘ TỔNG THỂ</p>
+                    <div class="progress-container"><div class="progress-bar" id="mainBar"></div></div>
+                    <div id="taskList"></div>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <h2><i class="fas fa-history"></i> Nhật ký phiên học</h2>
+                    <div id="sessionLog" style="font-size: 13px; color: #94a3b8; max-height: 150px; overflow-y: auto;">
+                        Chưa có dữ liệu phiên học...
+                    </div>
+                </div>
+            </section>
+
+            <aside>
+                <div class="card timer-v3">
+                    <div style="font-size: 12px; font-weight: 700; color: var(--gold); letter-spacing: 1px;">TRẠNG THÁI: HỌC BÀI</div>
+                    <div id="timer">25:00</div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="btn" style="flex:1" onclick="startTimer()">Bắt đầu</button>
+                        <button class="btn" style="flex:1; background: #334155;" onclick="pauseTimer()">Tạm dừng</button>
+                    </div>
+                    
+                    <button class="btn btn-speed" onclick="quickAddSession()">
+                        <i class="fas fa-bolt"></i> +1 Phiên (Nhanh)
+                    </button>
+
+                    <button class="btn btn-reset-sec" onclick="resetSessions()">
+                        <i class="fas fa-undo"></i> Reset phiên & Nhật ký
+                    </button>
+                    
+                    <button onclick="resetTimer()" style="background:none; border:none; color:#64748b; font-size:11px; margin-top:15px; cursor:pointer;">Đặt lại đồng hồ (25:00)</button>
+                </div>
+
+                <div class="card" style="margin-top: 25px;">
+                    <h2><i class="fas fa-chart-line" style="color: var(--success);"></i> Chỉ số Performance</h2>
+                    <div class="stat-grid">
+                        <div class="stat-card"><p>Tổng Task</p><div id="count">0</div></div>
+                        <div class="stat-card"><p>Phiên học</p><div id="sessions">0</div></div>
+                        <div class="stat-card"><p>Xong</p><div id="doneCount">0</div></div>
+                        <div class="stat-card"><p>Hiệu suất</p><div id="rate">0%</div></div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <small style="color: #64748b;">MỤC TIÊU PHIÊN HỌC/NGÀY</small>
+                        <input type="number" id="dailyGoal" value="4" onchange="saveGoal()">
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <script>
+        let tasks = JSON.parse(localStorage.getItem('tasks')) || [];
+        let studySessions = +localStorage.getItem('sessions') || 0;
+        let dailyGoal = +localStorage.getItem('dailyGoal') || 4;
+        let sessionLogs = JSON.parse(localStorage.getItem('sessionLogs')) || [];
+        let time = 1500, interval;
+
+        function save() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+            localStorage.setItem('sessions', studySessions);
+            localStorage.setItem('sessionLogs', JSON.stringify(sessionLogs));
+            render();
+        }
+
+        function addTask() {
+            let val = taskInput.value.trim();
+            if(!val) return;
+            tasks.push({text: val, done: false, priority: priority.value});
+            taskInput.value = '';
+            save();
+        }
+
+        function toggle(i) { tasks[i].done = !tasks[i].done; save(); }
+        function del(i, e) { e.stopPropagation(); tasks.splice(i, 1); save(); }
+        function saveGoal() { dailyGoal = Math.max(1, +dailyGoalInput.value); localStorage.setItem('dailyGoal', dailyGoal); render(); }
+
+        function quickAddSession() {
+            studySessions++;
+            sessionLogs.unshift(`⚡ Cộng nhanh lúc: ${new Date().toLocaleTimeString()}`);
+            save();
+        }
+
+        // TÍNH NĂNG MỚI: RESET PHIÊN
+        function resetSessions() {
+            if(confirm('Bạn có chắc chắn muốn xóa toàn bộ số phiên học và nhật ký hôm nay?')) {
+                studySessions = 0;
+                sessionLogs = [];
+                save();
+            }
+        }
+
+        function render() {
+            taskList.innerHTML = '';
+            tasks.forEach((t, i) => {
+                taskList.innerHTML += `
+                    <div class="task-item" onclick="toggle(${i})">
+                        <div class="${t.done ? 'done' : ''}" style="flex:1; cursor:pointer">
+                            <small style="color:var(--accent); font-weight:700;">${t.priority}</small><br>
+                            <b style="font-size:14px;">${t.text}</b>
+                        </div>
+                        <i class="fas fa-trash-alt" style="color: #ef4444; font-size:14px;" onclick="del(${i}, event)"></i>
+                    </div>`;
+            });
+
+            sessionLog.innerHTML = sessionLogs.length ? sessionLogs.map(l => `<div>• ${l}</div>`).join('') : "Chưa có dữ liệu...";
+
+            let doneTasks = tasks.filter(x => x.done).length;
+            let taskScore = tasks.length > 0 ? (doneTasks / tasks.length) : 0;
+            let sessionScore = studySessions / dailyGoal;
+            
+            let finalPercent = 0;
+            if(tasks.length === 0) {
+                finalPercent = Math.min(sessionScore * 100, 100);
+            } else {
+                finalPercent = Math.min(((taskScore + sessionScore) / 2) * 100, 100);
+            }
+
+            count.innerText = tasks.length;
+            sessions.innerText = studySessions;
+            doneCount.innerText = doneTasks;
+            rate.innerText = Math.round(finalPercent) + '%';
+            mainBar.style.width = finalPercent + '%';
+            currentDate.innerText = new Date().toLocaleDateString('vi-VN');
+        }
+
+        function startTimer() {
+            clearInterval(interval);
+            interval = setInterval(() => {
+                if(time > 0) { time--; updateTimerDisplay(); }
+                else { 
+                    clearInterval(interval); 
+                    studySessions++; 
+                    sessionLogs.unshift(`✅ Hoàn thành lúc: ${new Date().toLocaleTimeString()}`);
+                    save(); 
+                    time = 1500; updateTimerDisplay(); 
+                    alert('Hoàn thành phiên học! Hãy nghỉ ngơi 5 phút.');
+                }
+            }, 1000);
+        }
+
+        function pauseTimer() { clearInterval(interval); }
+        function resetTimer() { pauseTimer(); time = 1500; updateTimerDisplay(); }
+        function updateTimerDisplay() {
+            let m = Math.floor(time / 60), s = time % 60;
+            timer.innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
+        }
+
+        setInterval(() => { clock.innerText = new Date().toLocaleTimeString('vi-VN'); }, 1000);
+        render();
+    </script>
+</body>
+</html>
